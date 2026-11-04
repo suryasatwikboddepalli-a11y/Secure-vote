@@ -1,0 +1,16 @@
+{
+  "name": "securevote",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Academic decentralized voting DApp using Solidity, Hardhat, React, MetaMask, ethers.js and optional IPFS metadata.",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "node": "hardhat node",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.17"
+  }
+}
