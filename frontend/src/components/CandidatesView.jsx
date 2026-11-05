@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Users2, ExternalLink, Plus, Layers, Sparkles, CheckCircle2 } from "lucide-react";
+import { Users2, ExternalLink, Plus, Layers, Sparkles, CheckCircle2, Lock } from "lucide-react";
 
 export default function CandidatesView({
   elections,
@@ -16,6 +16,8 @@ export default function CandidatesView({
   const [manifestoCID, setManifestoCID] = useState("");
 
   const startTimestamp = election ? Number(election.startTime) : 0;
+  const endTimestamp = election ? Number(election.endTime) : 0;
+  const ended = election ? Boolean(election.ended) || nowTime >= endTimestamp : false;
   const started = election ? nowTime >= startTimestamp : false;
 
   const handleSubmit = e => {
@@ -91,8 +93,14 @@ export default function CandidatesView({
                     )}
                   </div>
                   <div className="roster-votes-box">
-                    <span className="text-dim text-xs">Votes</span>
-                    <strong className="text-lg">{cand.votes}</strong>
+                    <span className="text-dim text-xs">{ended ? "Final Votes" : "Ballot Status"}</span>
+                    {ended ? (
+                      <strong className="text-lg">{cand.votes}</strong>
+                    ) : (
+                      <span className="roster-sealed-badge" title="Tally sealed until election ends">
+                        <Lock size={12} /> Sealed
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}
@@ -154,3 +162,4 @@ export default function CandidatesView({
     </div>
   );
 }
+

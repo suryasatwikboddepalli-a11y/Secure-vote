@@ -11,7 +11,8 @@ import {
   TrendingUp,
   AlertCircle,
   ExternalLink,
-  ShieldCheck
+  ShieldCheck,
+  Lock
 } from "lucide-react";
 
 export default function DashboardView({
@@ -153,24 +154,36 @@ export default function DashboardView({
                     : "Pre-election nomination period. Candidates and voters are being registered prior to poll opening."}
                 </p>
 
-                {/* Leading / Winner Highlight */}
-                {leader && currentElectionVotes > 0 && (
-                  <div className="leader-highlight-card">
-                    <div className="leader-avatar">
-                      {selectedElection.status === "ended" ? "🏆" : "⚡"}
-                    </div>
+                {/* Winner Card (strictly when election has ended) OR Anti-Bias Sealed Notice during Live Poll */}
+                {selectedElection.status === "ended" && leader && currentElectionVotes > 0 ? (
+                  <div className="leader-highlight-card winner-card">
+                    <div className="leader-avatar">🏆</div>
                     <div className="leader-info">
-                      <span className="leader-title-tag">
-                        {selectedElection.status === "ended" ? "CERTIFIED WINNER" : "CURRENT RACE LEADER"}
-                      </span>
+                      <span className="leader-title-tag">OFFICIAL ELECTED WINNER</span>
                       <strong className="leader-name">{leader.name}</strong>
                     </div>
                     <div className="leader-score">
-                      <strong>{leader.votes}</strong>
+                      <strong>{leader.votes} votes</strong>
                       <span>({((Number(leader.votes) / currentElectionVotes) * 100).toFixed(1)}%)</span>
                     </div>
                   </div>
-                )}
+                ) : selectedElection.status === "live" ? (
+                  <div className="anti-bias-notice-card">
+                    <div className="anti-bias-icon-box">
+                      <Lock size={18} className="text-amber-600" />
+                    </div>
+                    <div className="anti-bias-info">
+                      <div className="flex-gap-2 align-center mb-0.5">
+                        <span className="anti-bias-tag">ELECTION INTEGRITY</span>
+                        <span className="sealed-pill">BALLOTS SEALED</span>
+                      </div>
+                      <strong className="anti-bias-heading">Candidate Standings Sealed Until Poll Closes</strong>
+                      <p className="anti-bias-sub">
+                        To guarantee impartiality and prevent voter influence, individual vote counts and the leaderboard remain confidential until voting finishes.
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
 
                 {/* Progress bar */}
                 <div className="hero-progress-section">
@@ -353,3 +366,4 @@ export default function DashboardView({
     </div>
   );
 }
+

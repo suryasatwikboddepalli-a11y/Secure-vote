@@ -75,3 +75,4 @@ export default function SettingsView({ account, isOwner, onConnect, busy }) {
     </div>
   );
 }
+
