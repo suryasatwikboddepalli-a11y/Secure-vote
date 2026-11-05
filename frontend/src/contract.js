@@ -11,11 +11,15 @@ export const ABI = [
   "function vote(uint256 electionId,uint256 candidateId)",
   "function getElection(uint256 electionId) view returns (string title,uint64 startTime,uint64 endTime,bool started,bool ended)",
   "function getCandidates(uint256 electionId) view returns ((uint256 id,string name,string manifestoCID,uint256 voteCount,bool exists)[])",
+  "function getCandidateCount(uint256 electionId) view returns (uint256)",
   "function isRegisteredVoter(uint256 electionId,address voter) view returns (bool)",
   "function hasVoted(uint256 electionId,address voter) view returns (bool)",
   "function endElection(uint256 electionId)",
+  "event ElectionCreated(uint256 indexed electionId,string title,uint256 startTime,uint256 endTime)",
+  "event CandidateAdded(uint256 indexed electionId,uint256 indexed candidateId,string name)",
+  "event VoterRegistered(uint256 indexed electionId,address indexed voter)",
   "event VoteCast(uint256 indexed electionId,uint256 indexed candidateId,address indexed voter)",
-  "event ElectionCreated(uint256 indexed electionId,string title,uint256 startTime,uint256 endTime)"
+  "event ElectionEnded(uint256 indexed electionId)"
 ];
 
 export async function connectWallet() {
