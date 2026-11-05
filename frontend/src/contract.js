@@ -13,6 +13,7 @@ export const ABI = [
   "function getCandidates(uint256 electionId) view returns ((uint256 id,string name,string manifestoCID,uint256 voteCount,bool exists)[])",
   "function isRegisteredVoter(uint256 electionId,address voter) view returns (bool)",
   "function hasVoted(uint256 electionId,address voter) view returns (bool)",
+  "function endElection(uint256 electionId)",
   "event VoteCast(uint256 indexed electionId,uint256 indexed candidateId,address indexed voter)",
   "event ElectionCreated(uint256 indexed electionId,string title,uint256 startTime,uint256 endTime)"
 ];
