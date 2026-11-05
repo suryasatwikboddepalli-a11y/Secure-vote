@@ -10,8 +10,10 @@ import {
   Check,
   ChevronDown,
   Layers,
-  ArrowRight
+  ArrowRight,
+  FileText
 } from "lucide-react";
+import ManifestoModal from "./ManifestoModal";
 
 export default function VoteView({
   elections,
@@ -27,6 +29,7 @@ export default function VoteView({
   onOpenConfirmationModal
 }) {
   const [selectedCandidateId, setSelectedCandidateId] = useState(null);
+  const [viewingManifesto, setViewingManifesto] = useState(null);
 
   // Time calculations
   const startTimestamp = election ? Number(election.startTime) : 0;
@@ -214,18 +217,22 @@ export default function VoteView({
                         <h4 className="ballot-candidate-name">{cand.name}</h4>
 
                         {cand.cid ? (
-                          <a
-                            className="manifesto-link-btn"
-                            href={`https://ipfs.io/ipfs/${encodeURIComponent(cand.cid)}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={e => e.stopPropagation()}
-                          >
-                            <span>Read Manifesto on IPFS</span>
-                            <ExternalLink size={12} />
-                          </a>
+                          <div className="candidate-ipfs-box" onClick={e => e.stopPropagation()}>
+                            <button
+                              type="button"
+                              className="manifesto-link-btn"
+                              onClick={() => setViewingManifesto(cand)}
+                            >
+                              <FileText size={12} className="text-indigo-600" />
+                              <span>Read Manifesto (IPFS)</span>
+                              <ExternalLink size={11} />
+                            </button>
+                            <span className="ipfs-cid-snippet font-mono" title={`IPFS CID: ${cand.cid}`}>
+                              CID: {cand.cid.slice(0, 8)}…{cand.cid.slice(-4)}
+                            </span>
+                          </div>
                         ) : (
-                          <span className="text-dim text-xs">Official Nominee</span>
+                          <span className="text-dim text-xs">Official Nominee (No CID)</span>
                         )}
                       </div>
 
@@ -277,6 +284,14 @@ export default function VoteView({
           <h3>No Election Selected</h3>
           <p className="text-dim text-sm">Please select an election from the dropdown above.</p>
         </div>
+      )}
+
+      {/* In-App IPFS Manifesto Modal */}
+      {viewingManifesto && (
+        <ManifestoModal
+          candidate={viewingManifesto}
+          onClose={() => setViewingManifesto(null)}
+        />
       )}
     </div>
   );

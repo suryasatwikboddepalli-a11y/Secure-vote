@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Users2, ExternalLink, Plus, Layers, Sparkles, CheckCircle2, Lock } from "lucide-react";
+import { Users2, ExternalLink, Plus, Layers, Sparkles, CheckCircle2, Lock, FileText, Database } from "lucide-react";
+import ManifestoModal from "./ManifestoModal";
 
 export default function CandidatesView({
   elections,
@@ -14,6 +15,7 @@ export default function CandidatesView({
 }) {
   const [candidateName, setCandidateName] = useState("");
   const [manifestoCID, setManifestoCID] = useState("");
+  const [selectedManifestoCandidate, setSelectedManifestoCandidate] = useState(null);
 
   const startTimestamp = election ? Number(election.startTime) : 0;
   const endTimestamp = election ? Number(election.endTime) : 0;
@@ -79,17 +81,22 @@ export default function CandidatesView({
                     <span className="roster-id-badge">CANDIDATE #{cand.id}</span>
                     <h4 className="roster-name">{cand.name}</h4>
                     {cand.cid ? (
-                      <a
-                        className="manifesto-link-btn"
-                        href={`https://ipfs.io/ipfs/${encodeURIComponent(cand.cid)}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <span>View Manifesto (IPFS)</span>
-                        <ExternalLink size={12} />
-                      </a>
+                      <div className="candidate-ipfs-box">
+                        <button
+                          type="button"
+                          className="manifesto-link-btn"
+                          onClick={() => setSelectedManifestoCandidate(cand)}
+                        >
+                          <FileText size={12} className="text-indigo-600" />
+                          <span>View Manifesto (IPFS)</span>
+                          <ExternalLink size={11} />
+                        </button>
+                        <span className="ipfs-cid-snippet font-mono" title={`IPFS CID: ${cand.cid}`}>
+                          CID: {cand.cid.slice(0, 8)}…{cand.cid.slice(-4)}
+                        </span>
+                      </div>
                     ) : (
-                      <span className="text-dim text-xs">Standard Nominee</span>
+                      <span className="text-dim text-xs">Standard Nominee (No CID)</span>
                     )}
                   </div>
                   <div className="roster-votes-box">
@@ -140,11 +147,20 @@ export default function CandidatesView({
                   </label>
 
                   <label className="form-label">
-                    <span>Manifesto IPFS CID (Optional)</span>
+                    <div className="flex-between align-center mb-1">
+                      <span>Manifesto IPFS CID (Optional)</span>
+                      <button
+                        type="button"
+                        className="btn-chip"
+                        onClick={() => setManifestoCID("bafybeicg2rebqfsinjld2hm5cqcwv53v2m7pge5hcf7p2z4j35e6vhf2t4")}
+                      >
+                        ⚡ Insert Sample CID
+                      </button>
+                    </div>
                     <input
                       type="text"
-                      className="form-input"
-                      placeholder="bafybeic..."
+                      className="form-input font-mono text-xs"
+                      placeholder="e.g. bafybeic... or QmXo..."
                       value={manifestoCID}
                       onChange={e => setManifestoCID(e.target.value)}
                     />
@@ -159,6 +175,14 @@ export default function CandidatesView({
           </div>
         )}
       </div>
+
+      {/* Manifesto IPFS Inspection Modal */}
+      {selectedManifestoCandidate && (
+        <ManifestoModal
+          candidate={selectedManifestoCandidate}
+          onClose={() => setSelectedManifestoCandidate(null)}
+        />
+      )}
     </div>
   );
 }
